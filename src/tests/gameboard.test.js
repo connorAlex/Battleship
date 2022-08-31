@@ -57,6 +57,9 @@ describe('detecting hits on board',() => {
         board.receiveAttack(0,2);
         expect(a.getPosition(1)).toBe(1);
     });
+    test("a miss returns coordinates", () => {
+        expect(board.receiveAttack(9,9)).toEqual([9,9]);
+    })
 });
 //receiveAttack function takes a pair of coordinates and determines if a ship is on that location
 
