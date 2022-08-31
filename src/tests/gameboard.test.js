@@ -49,8 +49,13 @@ describe('detecting hits on board',() => {
     test("ship can be hit on grid", () => {
         
         board.receiveAttack(3,3);
-        console.log(board.getGrid()[3][3]);
         expect(dummyShip.getPosition(0)).toBe(1);
+    });
+    test("vertical ship can be hit on grid", () => {
+        let a = new ship(2);
+        board.placeShip(a, 0,0, false);
+        board.receiveAttack(0,2);
+        expect(a.getPosition(1)).toBe(1);
     });
 });
 //receiveAttack function takes a pair of coordinates and determines if a ship is on that location
