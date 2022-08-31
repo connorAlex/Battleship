@@ -2,6 +2,8 @@
 const gameboard = () => {
     let grid;
 
+    const getGrid = () => grid;
+    
     const createGrid = () => {
         grid = new Array(10);
         for (let i = 0; i < 10; i++) {
@@ -10,15 +12,15 @@ const gameboard = () => {
         return grid;
     };
 
-    const placeHorizontalShip = (myShip, x, y) => {
+    const placeShip = (myShip, x, y, isHorizontal) => {
         for (let i = 0; i < myShip.getLength(); i++){
-            grid[x][y + i] = myShip;
+            (isHorizontal)? (grid[x][y + i] = myShip): (grid[x + i][y] = myShip);
         };
     };
 
-    const getGrid = () => grid;
+    
 
-    return {createGrid,placeHorizontalShip, getGrid};
+    return {createGrid,placeShip, getGrid};
 
 };
 
