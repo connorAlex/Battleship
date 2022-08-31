@@ -30,6 +30,8 @@ const gameboard = () => {
         let cell = grid[x][y];
         if((cell.ship !== undefined)) {
             cell.ship.hit(cell.shipIndex);
+        } else{
+            return [x,y];
         };
     };
 
