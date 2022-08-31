@@ -21,6 +21,11 @@ test("gameboard places ship at specific coordinates", () => {
     board.placeHorizontalShip(testShip,1,1);
     expect(board.getGrid()[1][1]).toBe(testShip);
 });
+
+test("entire ship is added to board",() => {
+    board.placeHorizontalShip(testShip,0,0);
+    expect(board.getGrid()[0][3]).toBe(testShip);
+});
 //receiveAttack function takes a pair of coordinates and determines if a hip is on that location
 
 //receiveAttack sends the 'hit' function to the ship it hit
