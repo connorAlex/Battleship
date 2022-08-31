@@ -1,26 +1,41 @@
 
 const gameboard = () => {
-    let grid;
-
-    const getGrid = () => grid;
     
     const createGrid = () => {
-        grid = new Array(10);
+        let grid = new Array(10);
         for (let i = 0; i < 10; i++) {
-            grid[i] = new Array(10);
+            grid[i] = new Array(10).fill({ship: undefined, shipIndex: undefined});
         }
         return grid;
     };
 
+    let grid = createGrid();
+    
+    const getGrid = () => grid;
+
     const placeShip = (myShip, x, y, isHorizontal) => {
         for (let i = 0; i < myShip.getLength(); i++){
-            (isHorizontal)? (grid[x][y + i] = myShip): (grid[x + i][y] = myShip);
+            if (isHorizontal) {
+                grid[x + i][y].ship = myShip;
+                grid[x + i][y].shipIndex = i;
+            } else {
+                grid[x][y + i].ship = myShip
+                grid[x][y + i].shipIndex = i;
+            }
+            
+        };
+    };
+
+    const receiveAttack = (x,y) => {
+        let cell = grid[x][y];
+        if((cell.ship !== undefined)) {
+            cell.ship.hit(cell.shipIndex);
         };
     };
 
     
 
-    return {createGrid,placeShip, getGrid};
+    return {createGrid,placeShip, getGrid, receiveAttack};
 
 };
 
