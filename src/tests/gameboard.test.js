@@ -18,14 +18,19 @@ test("create a 10x10 grid", () => {
 
 //gameboard places ships at specific coordinates on the board
 test("gameboard places ship at specific coordinates", () => {
-    board.placeHorizontalShip(testShip,1,1);
+    board.placeShip(testShip,1,1, true);
     expect(board.getGrid()[1][1]).toBe(testShip);
 });
 
-test("entire ship is added to board",() => {
-    board.placeHorizontalShip(testShip,0,0);
+test("entire ship is added to board", () => {
+    board.placeShip(testShip,0,0, true);
     expect(board.getGrid()[0][3]).toBe(testShip);
 });
+
+test("ship can be place vertically", () => {
+    board.placeShip(testShip,0,0, false);
+    expect(board.getGrid()[3][0]).toBe(testShip);
+})
 //receiveAttack function takes a pair of coordinates and determines if a hip is on that location
 
 //receiveAttack sends the 'hit' function to the ship it hit
