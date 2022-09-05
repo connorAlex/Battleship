@@ -2,6 +2,8 @@ const ship = (length) => {
 
     const positions = new Array(length).fill(0);
 
+    const getAllPositions = () => positions;
+
     const getPosition = (i) => positions[i];
     
     const getLength = () => length;
@@ -20,7 +22,7 @@ const ship = (length) => {
         return true;
     }
 
-    return {hit,getLength, isSunk, getPosition};
+    return {hit,getLength, isSunk, getPosition, getAllPositions};
 }
 
 export {ship};
