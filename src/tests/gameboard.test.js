@@ -48,7 +48,7 @@ describe('detecting hits on board',() => {
         expect(dummyShip.getPosition(0)).toBe(1);
     });
 
-    test.only("vertical ship can be hit on grid", () => {
+    test("vertical ship can be hit on grid", () => {
         let a = new ship(3);
         board.placeShip(a, 0, 0, false);
         board.receiveAttack(0,2);
@@ -68,6 +68,26 @@ describe('record missed shots', () => {
     test("return list of all missed shots", () => {
         expect(board.getMissedShots()).toEqual([[1,1],[1,2]]);
     });
+});
+
+describe('detect if ships are destroyed', () => {
+
+    beforeAll(() => {
+        testShip = new ship(1);
+        board.placeShip(testShip,0,0, true);
+    });
+    
+    test("detect if all ships are destroyed (some alive)", () => {
+        expect(board.isAllDestroyed()).toBe(false);
+    });
+
+    // too lazy to kill every ship, run with test.only
+
+    // test("detect if all ships are destroyed (all dead)", () => {
+    //     board.receiveAttack(0,0);
+    //     expect(board.isAllDestroyed()).toBe(true);
+    // });
+
 });
 
 //gameboard hasWon function that determines if all ships have been sunk
