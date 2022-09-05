@@ -14,10 +14,13 @@ const gameboard = () => {
     };
     let grid = createGrid();
     let missedShots = [];
+    let shipCatalogue = [];
     
     const getGrid = () => grid;
+    const getMissedShots = () => missedShots;
 
     const placeShip = (myShip, x, y, isHorizontal) => {
+        shipCatalogue.push(myShip);
         for (let i = 0; i < myShip.getLength(); i++){
             if (isHorizontal === true) {
                 grid[y][(x + i)].ship = myShip;
@@ -39,9 +42,26 @@ const gameboard = () => {
         };
     };
 
-    const getMissedShots = () => missedShots;
+    const isAllDestroyed = () => {
+        console.log(shipCatalogue);
+        for (let i = 0; i < shipCatalogue.length; i++) {
+            if (shipCatalogue[i].isSunk() === false) {
+                return false;
+            }
+        }
 
-    return {createGrid,placeShip, getGrid, receiveAttack, getMissedShots};
+        return true;
+    }
+   
+
+
+    return {
+        createGrid,placeShip,
+        getGrid, 
+        receiveAttack, 
+        getMissedShots,
+        isAllDestroyed
+    };
 
 };
 
