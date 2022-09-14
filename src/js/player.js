@@ -13,7 +13,6 @@ const Player = () => {
 
     const robotAttack = (board) => {
         let coordinates = getRandomCoordinates();
-        console.log(coordinates);
         history.push(coordinates);
         board.receiveAttack(coordinates[0],coordinates[1]);
     };
