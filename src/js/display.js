@@ -10,7 +10,6 @@ const displayController = (() => {
     };
 
     const updateBoard = (grid) => {
-
       let boardParent = document.createElement("div");
       boardParent.classList.add("board");
 
@@ -20,6 +19,9 @@ const displayController = (() => {
         
         for (let j = 0; j < grid[i].length; j++) {
           let cell = createCell(j,i);
+          cell.addEventListener("click", (e) => {
+            if (e.target.parentNode.parentNode.nextElementSibling != null) selectCell(cell)
+          });
           cell.classList.add("cell")
 
           if (grid[i][j].hit === true) {
@@ -36,7 +38,6 @@ const displayController = (() => {
 
   const createCell = (x,y) => {
     let cell = document.createElement("div");
-    cell.addEventListener("click", () => selectCell(cell));
     cell.setAttribute("y", y);
     cell.setAttribute("x", x);
     cell.innerHTML = `${y}${x}`;
@@ -55,7 +56,8 @@ const displayController = (() => {
     const x = cell.getAttribute("x");
     const y = cell.getAttribute("y");
     let boards = document.querySelectorAll(".board");
-    console.log(boards);
+
+    //this current player is why only the top board is changing
     currentPlayer.attack(x,y);
     currentPlayer.getEnemy().robotAttack();
     
