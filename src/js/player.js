@@ -2,7 +2,7 @@ import {gameboard} from "../js/gameboard.js"
 import {ship} from "./ship.js";
 
 
-const Player = () => {
+const Player = (name) => {
     let board = gameboard();
     let enemy;
 
@@ -29,6 +29,8 @@ const Player = () => {
     const getGameboard = () => board;
 
     const getHistory = () => history;
+
+    const getName = () => name;
 
     const robotAttack = () => {
         let coordinates = getRandomCoordinates();
@@ -57,7 +59,8 @@ const Player = () => {
         setEnemy,
         getGameboard,
         getEnemyBoard,
-        getEnemy
+        getEnemy,
+        getName,
     }
 };
 
