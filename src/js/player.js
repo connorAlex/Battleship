@@ -1,20 +1,39 @@
 import {gameboard} from "../js/gameboard.js"
+import {ship} from "./ship.js";
+
 
 const Player = () => {
+    let board = gameboard();
+    let enemy;
 
     let history = [];
 
-    const attack = (x, y, board) => {
+    const attack = (x, y) => {
+        x = parseInt(x);
+        y = parseInt(y);
+
+        if (history.includes([x,y]) === false) {
+            getEnemyBoard().receiveAttack(x,y);
+        }
+        history.push([x,y]);
         
-        board.receiveAttack(x,y);
     };
+
+    const setEnemy = (player) => {
+        enemy = player;
+    };
+    const getEnemy = () => enemy;
+
+    const getEnemyBoard = () => enemy.getGameboard();
     
+    const getGameboard = () => board;
+
     const getHistory = () => history;
 
-    const robotAttack = (board) => {
+    const robotAttack = () => {
         let coordinates = getRandomCoordinates();
         history.push(coordinates);
-        board.receiveAttack(coordinates[0],coordinates[1]);
+        attack(coordinates[0],coordinates[1]);
     };
 
     const getRandomCoordinates = () => {
@@ -34,7 +53,11 @@ const Player = () => {
     return {
         attack,
         robotAttack,
-        getHistory
+        getHistory,
+        setEnemy,
+        getGameboard,
+        getEnemyBoard,
+        getEnemy
     }
 };
 
