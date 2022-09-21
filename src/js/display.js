@@ -30,23 +30,9 @@ const displayController = (() => {
         for (let j = 0; j < grid[i].length; j++) {
           let cell = createCell(j,i);
 
-          cell.addEventListener("click", (e) => {
-            if (e.target.parentNode.parentNode.nextElementSibling != null) {
-              selectCell(cell);
-            };
-          });
-          cell.classList.add("cell")
-          hover(cell);
-
           if (player.getName() === "player" && grid[i][j].ship != undefined) {
             cell.classList.add("ship");
           }
-          
-          if (grid[i][j].hit === true) {
-            markHit(cell);
-          } else if (grid[i][j].hit === false){
-            markMiss(cell);
-          };
           row.appendChild(cell);
         };
         
@@ -57,11 +43,27 @@ const displayController = (() => {
     return boardParent;
   };
 
+
   const createCell = (x,y) => {
     let cell = document.createElement("div");
     cell.setAttribute("y", y);
     cell.setAttribute("x", x);
     cell.innerHTML = `${y}${x}`;
+
+    cell.addEventListener("click", (e) => {
+      if (e.target.parentNode.parentNode.nextElementSibling != null) {
+        selectCell(cell);
+      };
+    });
+
+    if (grid[y][x].hit === true) {
+      markHit(cell);
+    } else if (grid[y][x].hit === false){
+      markMiss(cell);
+    };
+
+    cell.classList.add("cell")
+    hover(cell);
     return cell;
   }
 
