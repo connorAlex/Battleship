@@ -29,12 +29,14 @@ const displayController = (() => {
         
         for (let j = 0; j < grid[i].length; j++) {
           let cell = createCell(j,i);
+
           cell.addEventListener("click", (e) => {
             if (e.target.parentNode.parentNode.nextElementSibling != null) {
               selectCell(cell);
             };
           });
           cell.classList.add("cell")
+          hover(cell);
 
           if (player.getName() === "player" && grid[i][j].ship != undefined) {
             cell.classList.add("ship");
@@ -64,11 +66,27 @@ const displayController = (() => {
   }
 
   const markHit = (cell) => {
+    cell.classList.remove("hover");
     cell.classList.add("hit");
+    
   };
 
   const markMiss = (cell) => {
     cell.classList.add("miss");
+  };
+
+  const hover = (cell) => {
+    cell.addEventListener("mouseover", (e) => {
+      if (e.target.parentNode.parentNode.nextElementSibling != null) {
+        cell.classList.toggle("hover");
+      };
+    });
+    cell.addEventListener("mouseout", (e) => {
+      if (e.target.parentNode.parentNode.nextElementSibling != null) {
+        cell.classList.toggle("hover");
+      };
+      
+    });
   };
 
   const selectCell = (cell) => {
@@ -80,14 +98,17 @@ const displayController = (() => {
     currentPlayer.attack(x,y);
     currentPlayer.getEnemy().robotAttack();
 
-    if (currentPlayer.getGameboard().isAllDestroyed()){
-      endGame(currentPlayer.getName());
-    } else if (currentPlayer.getEnemyBoard().isAllDestroyed()) {
-      endGame(currentPlayer.getEnemy().getName());
-    }
-    
     body.replaceChild(updateBoard(currentPlayer.getEnemy()), boards[0]);
     body.replaceChild(updateBoard(currentPlayer), boards[1]);
+
+    if (currentPlayer.getEnemyBoard().isAllDestroyed()){
+      endGame(currentPlayer.getEnemy().getName());
+    } else if (currentPlayer.getGameboard().isAllDestroyed()) {
+      console.log("kjasd;fljkasdf");
+      console.log(currentPlayer.getName());
+      endGame(currentPlayer.getEnemy().getName());
+    }
+
   };
 
   const endGame = (name) => {
