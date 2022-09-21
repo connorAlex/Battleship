@@ -75,13 +75,16 @@ const displayController = (() => {
     const x = cell.getAttribute("x");
     const y = cell.getAttribute("y");
     let boards = document.querySelectorAll(".board");
-    console.log(grid[y][x]);
+
     //this current player is why only the top board is changing
     currentPlayer.attack(x,y);
+    currentPlayer.getEnemy().robotAttack();
+
     if (currentPlayer.getGameboard().isAllDestroyed()){
       endGame(currentPlayer.getName());
+    } else if (currentPlayer.getEnemyBoard().isAllDestroyed()) {
+      endGame(currentPlayer.getEnemy().getName());
     }
-    currentPlayer.getEnemy().robotAttack();
     
     body.replaceChild(updateBoard(currentPlayer.getEnemy()), boards[0]);
     body.replaceChild(updateBoard(currentPlayer), boards[1]);
