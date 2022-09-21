@@ -30,9 +30,15 @@ const displayController = (() => {
         for (let j = 0; j < grid[i].length; j++) {
           let cell = createCell(j,i);
           cell.addEventListener("click", (e) => {
-            if (e.target.parentNode.parentNode.nextElementSibling != null) selectCell(cell)
+            if (e.target.parentNode.parentNode.nextElementSibling != null) {
+              selectCell(cell);
+            };
           });
           cell.classList.add("cell")
+
+          if (player.getName() === "player" && grid[i][j].ship != undefined) {
+            cell.classList.add("ship");
+          }
           
           if (grid[i][j].hit === true) {
             markHit(cell);
@@ -72,20 +78,21 @@ const displayController = (() => {
     console.log(grid[y][x]);
     //this current player is why only the top board is changing
     currentPlayer.attack(x,y);
+    if (currentPlayer.getGameboard().isAllDestroyed()){
+      endGame(currentPlayer.getName());
+    }
     currentPlayer.getEnemy().robotAttack();
     
     body.replaceChild(updateBoard(currentPlayer.getEnemy()), boards[0]);
     body.replaceChild(updateBoard(currentPlayer), boards[1]);
   };
 
-  const test = () => {
-    let a = "abc";
-    return a;
+  const endGame = (name) => {
+    alert(`game over, ${name} wins!`);
   };
 
   return {
     updateBoard,
-    test,
     setPlayer,
   };
 }
