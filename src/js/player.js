@@ -5,6 +5,7 @@ import {ship} from "./ship.js";
 const Player = (name) => {
     let board = gameboard();
     let enemy;
+    let moves = [];
 
     let history = [];
 
@@ -14,14 +15,17 @@ const Player = (name) => {
 
         if (history.includes([x,y]) === false) {
             getEnemyBoard().receiveAttack(x,y);
+        } else {
+            return false;
         }
-        history.push([x,y]);
+        //history.push([x,y]);
         
     };
 
     const setEnemy = (player) => {
         enemy = player;
     };
+
     const getEnemy = () => enemy;
 
     const getEnemyBoard = () => enemy.getGameboard();
@@ -34,22 +38,30 @@ const Player = (name) => {
 
     const robotAttack = () => {
         let coordinates = getRandomCoordinates();
-        history.push(coordinates);
         attack(coordinates[0],coordinates[1]);
     };
 
-    const getRandomCoordinates = () => {
-        let x = Math.abs(Math.round(Math.random() * 10 - 1));
-        let y = Math.abs(Math.round(Math.random() * 10 - 1));
+    //append all possible combinations of [x,y] to an array
+    const createMoves = () => {
+        while (moves.length != 100) {
+            let x = Math.floor(Math.random() * 10);
+            let y = Math.floor(Math.random() * 10);
 
-        let num = [x,y];
+            if (!moves.find(function([a,b]) {
+                return a === x && b === y
+            })){
+                moves.push([x,y]);
+            }
 
-        if (!history.includes(num)) {
-            return num;
         }
-        else{
-            return getRandomCoordinates();
-        };
+
+    };
+    createMoves();
+    const getRandomCoordinates = () => {
+        
+        let num = moves.pop();
+        console.log(num);
+        return num;
     }
 
     return {
