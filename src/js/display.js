@@ -46,9 +46,11 @@ const displayController = (() => {
 
   const createCell = (x,y) => {
     let cell = document.createElement("div");
+    cell.classList.add("cell")
     cell.setAttribute("y", y);
     cell.setAttribute("x", x);
     cell.innerHTML = `${y}${x}`;
+    hover(cell);
 
     cell.addEventListener("click", (e) => {
       if (e.target.parentNode.parentNode.nextElementSibling != null) {
@@ -62,15 +64,12 @@ const displayController = (() => {
       markMiss(cell);
     };
 
-    cell.classList.add("cell")
-    hover(cell);
     return cell;
   }
 
   const markHit = (cell) => {
     cell.classList.remove("hover");
     cell.classList.add("hit");
-    
   };
 
   const markMiss = (cell) => {
@@ -96,19 +95,16 @@ const displayController = (() => {
     const y = cell.getAttribute("y");
     let boards = document.querySelectorAll(".board");
 
-    //this current player is why only the top board is changing
     currentPlayer.attack(x,y);
     currentPlayer.getEnemy().robotAttack();
 
     body.replaceChild(updateBoard(currentPlayer.getEnemy()), boards[0]);
     body.replaceChild(updateBoard(currentPlayer), boards[1]);
 
-    if (currentPlayer.getEnemyBoard().isAllDestroyed()){
+    if (currentPlayer.getGameboard().isAllDestroyed()){
       endGame(currentPlayer.getEnemy().getName());
-    } else if (currentPlayer.getGameboard().isAllDestroyed()) {
-      console.log("kjasd;fljkasdf");
-      console.log(currentPlayer.getName());
-      endGame(currentPlayer.getEnemy().getName());
+    } else if (currentPlayer.getEnemyBoard().isAllDestroyed()) {
+      endGame(currentPlayer.getName());
     }
 
   };
