@@ -1,17 +1,18 @@
 const gameboard = () => {
+  let grid = [];
+  let missedShots = [];
+  let shipCatalogue = [];
   const createGrid = () => {
-    let grid = [];
     for (let i = 0; i < 10; i++) {
       grid.push([]);
       for (let j = 0; j < 10; j++) {
-        grid[i][j] = { ship: undefined, shipIndex: undefined };
+        grid[i][j] = { ship: undefined, shipIndex: undefined, hit: null};
       }
     }
     return grid;
   };
-  let grid = createGrid();
-  let missedShots = [];
-  let shipCatalogue = [];
+  grid = createGrid();
+  
 
   const getGrid = () => grid;
   const getMissedShots = () => missedShots;
@@ -31,20 +32,24 @@ const gameboard = () => {
 
   const receiveAttack = (x, y) => {
     let cell = grid[y][x];
-    if (cell.ship != undefined) {
-      cell.ship.hit(cell.shipIndex);
-    } else {
+    if(cell.ship === undefined) {
       missedShots.push([x, y]);
+      cell.hit = false;
+    } else {
+      console.log("hit");
+      cell.ship.hit(cell.shipIndex);
+      cell.hit = true;
+      
     }
   };
 
+  
   const isAllDestroyed = () => {
     for (let i = 0; i < shipCatalogue.length; i++) {
       if (shipCatalogue[i].isSunk() === false) {
         return false;
       }
     }
-
     return true;
   };
 
