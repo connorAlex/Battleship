@@ -4,20 +4,42 @@ import { displayController } from "./display.js";
 import {ship} from "./ship.js";
 
 const game = (() => {
-    let player = Player();
-    let computer = Player();
+    let player = Player("player");
+    let computer = Player("computer");
+    let carrier = ship(5);
+    let battleship = ship(4);
+    let destroyer = ship(3);
+    let sub = ship(3);
+    let cruiser = ship(2);
     let testShip = ship(3);
+    let ships = [
+      carrier,
+      battleship,
+      destroyer,
+      sub,
+      cruiser
+    ];
+    let direction = false;
     let body = document.querySelector("body");
 
-    displayController.setPlayer(player);
     player.setEnemy(computer);
     computer.setEnemy(player);
-    computer.getGameboard().placeShip(testShip,0,0,true);
+    
+    
+    while (computer.getGameboard().getShips().length < 5) {
+        let x = Math.floor(Math.random() * 10);
+        let y = Math.floor(Math.random() * 10);
+        
 
-    // player.attack(0,0);
-    // player.attack(1,0);
-    
-    
-    body.appendChild(displayController.updateBoard(player.getEnemyBoard().getGrid()));
-    body.appendChild(displayController.updateBoard(player.getGameboard().getGrid()));
+        let ship = ships.at(-1);
+        if (computer.getGameboard().placeShip(ship,parseInt(x),parseInt(y),direction) === false){
+            continue;
+        }
+        ships.pop();
+        direction = !direction;
+    };
+    console.log(computer.getGameboard().getShips());
+    displayController.setPlayer(player);
+    body.appendChild(displayController.updateBoard(computer));
+    body.appendChild(displayController.updateBoard(player));
 })();
