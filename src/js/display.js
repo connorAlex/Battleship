@@ -6,6 +6,19 @@ const displayController = (() => {
     let currentPlayer;
     let body = document.querySelector("body");
     let grid;
+    let allPlaced = false;
+    let carrier = ship(5);
+    let battleship = ship(4);
+    let destroyer = ship(3);
+    let sub = ship(3);
+    let cruiser = ship(2);
+    let ships = [
+      carrier,
+      battleship,
+      destroyer,
+      sub,
+      cruiser
+    ];
 
     const setPlayer = (player) => {
       currentPlayer = player;
@@ -21,7 +34,6 @@ const displayController = (() => {
       boardParent.append(titleDiv);
       boardParent.classList.add("board");
 
-
       //this should be refactored
       for (let i = 0; i < grid.length; i++) {
         let row = document.createElement("div");
@@ -32,7 +44,8 @@ const displayController = (() => {
 
           if (player.getName() === "player" && grid[i][j].ship != undefined) {
             cell.classList.add("ship");
-          }
+          };
+
           row.appendChild(cell);
         };
         
@@ -44,6 +57,8 @@ const displayController = (() => {
   };
 
 
+
+
   const createCell = (x,y) => {
     let cell = document.createElement("div");
     cell.classList.add("cell")
@@ -53,9 +68,18 @@ const displayController = (() => {
     hover(cell);
 
     cell.addEventListener("click", (e) => {
-      if (e.target.parentNode.parentNode.nextElementSibling != null) {
+      let isPlayerBoard = e.target.parentNode.parentNode.nextElementSibling;
+      if (allPlaced === false && isPlayerBoard === null){
         selectCell(cell);
+      } else {
+        if (allPlaced === true && isPlayerBoard != null && (!cell.classList.contains("hit") && !cell.classList.contains("miss") )) {
+          selectCell(cell);
+        };
       };
+
+
+       
+      // selectCell(cell);
     });
 
     if (grid[y][x].hit === true) {
@@ -90,27 +114,49 @@ const displayController = (() => {
     });
   };
 
+  //this is doing a million things...sloppy...
   const selectCell = (cell) => {
-    const x = cell.getAttribute("x");
-    const y = cell.getAttribute("y");
+    const x = parseInt(cell.getAttribute("x"));
+    const y = parseInt(cell.getAttribute("y"));
     let boards = document.querySelectorAll(".board");
 
-    currentPlayer.attack(x,y);
-    currentPlayer.getEnemy().robotAttack();
+    console.log(currentPlayer.getGameboard().getShips().length);
+
+    if (allPlaced === true) {
+      currentPlayer.attack(x,y);
+      currentPlayer.getEnemy().robotAttack();
+
+    }
+    if (allPlaced != true){
+      let selectedShip = ships[currentPlayer.getGameboard().getShips().length];
+      console.log("place");
+      console.log(selectedShip);
+      currentPlayer.getGameboard().placeShip(
+        selectedShip,
+        x,y,true);
+        if (currentPlayer.getGameboard().getShips().length === 5){
+          allPlaced = true;
+        }
+      
+
+      if (currentPlayer.getGameboard().isAllDestroyed()){
+        endGame(currentPlayer.getEnemy().getName());
+      } else if (currentPlayer.getEnemyBoard().isAllDestroyed()) {
+        endGame(currentPlayer.getName());
+
+        
+      }
+    };
+    
 
     body.replaceChild(updateBoard(currentPlayer.getEnemy()), boards[0]);
     body.replaceChild(updateBoard(currentPlayer), boards[1]);
 
-    if (currentPlayer.getGameboard().isAllDestroyed()){
-      endGame(currentPlayer.getEnemy().getName());
-    } else if (currentPlayer.getEnemyBoard().isAllDestroyed()) {
-      endGame(currentPlayer.getName());
-    }
-
   };
 
   const endGame = (name) => {
-    alert(`game over, ${name} wins!`);
+    body.innerHTML = `game over, ${name} wins!`;
+    
   };
 
   return {
