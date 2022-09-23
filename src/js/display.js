@@ -73,6 +73,7 @@ const displayController = (() => {
     if (allPlaced === false) {
       cell.addEventListener("mouseover", (e) => {
         if (!e.target.parentNode.parentNode.nextElementSibling) {
+          console.log(ships);
           previewShip(cell, ships.at(-1));
         };
        
@@ -115,17 +116,7 @@ const displayController = (() => {
   const markMiss = (cell) => {
     cell.classList.add("miss");
   };
-
-  const previewShip = (cell, ship) => {
-    let originalX = parseInt(cell.getAttribute("x"));
-    let originalY = cell.getAttribute("y");
-    for (let i = 0; i < ship.getLength(); i++){
-      
-      let selectedCell = document.querySelector(`[player= 'player'][x='${String(originalX + i)}'][y='${originalY}']`);
-      selectedCell.classList.add("preview");
-    }
-  }
-
+  
   const hover = (cell) => {
     cell.addEventListener("mouseover", (e) => {
       if (e.target.parentNode.parentNode.nextElementSibling != null) {
@@ -139,6 +130,18 @@ const displayController = (() => {
       
     });
   };
+
+  const previewShip = (cell, ship) => {
+    let originalX = parseInt(cell.getAttribute("x"));
+    let originalY = cell.getAttribute("y");
+    for (let i = 0; i < ship.getLength(); i++){
+      
+      let selectedCell = document.querySelector(`[player= 'player'][x='${String(originalX + i)}'][y='${originalY}']`);
+      if (selectedCell != undefined) selectedCell.classList.add("preview");
+    }
+  }
+
+  
 
   //this is doing a million things...sloppy...
   const selectCell = (cell) => {
@@ -156,18 +159,20 @@ const displayController = (() => {
         endGame(currentPlayer.getName());
       }
 
-    }else {
-      let selectedShip = ships.pop();
-      //previewShip(selectedShip,cell);
-      currentPlayer.getGameboard().placeShip(
-        selectedShip,
-        x,y,true);
+    }else if (currentPlayer.getGameboard().validateCell(x + 1,y) || currentPlayer.getGameboard().validateCell(x,y+1)){
+      let selectedShip = ships.at(-1);
+      
+      if(currentPlayer.getGameboard().placeShip(selectedShip,x,y,true) === false){
+        return false;
+      };
 
       if (currentPlayer.getGameboard().getShips().length === 5){
         allPlaced = true;
       }
 
-    };
+      ships.pop();
+
+    }
     
     body.replaceChild(updateBoard(currentPlayer.getEnemy()), boards[0]);
     body.replaceChild(updateBoard(currentPlayer), boards[1]);
