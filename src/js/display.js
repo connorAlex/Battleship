@@ -33,6 +33,7 @@ const displayController = (() => {
       titleDiv.append(title);
       boardParent.append(titleDiv);
       boardParent.classList.add("board");
+      
 
       //this should be refactored
       for (let i = 0; i < grid.length; i++) {
@@ -41,6 +42,7 @@ const displayController = (() => {
         
         for (let j = 0; j < grid[i].length; j++) {
           let cell = createCell(j,i);
+          cell.setAttribute("player", player.getName());
 
           if (player.getName() === "player" && grid[i][j].ship != undefined) {
             cell.classList.add("ship");
@@ -64,8 +66,26 @@ const displayController = (() => {
     cell.classList.add("cell")
     cell.setAttribute("y", y);
     cell.setAttribute("x", x);
-    cell.innerHTML = `${y}${x}`;
+    
+    //cell.innerHTML = `${y}${x}`;
     hover(cell);
+    //console.log(ships.at(-1).length);
+    if (allPlaced === false) {
+      cell.addEventListener("mouseover", (e) => {
+        if (!e.target.parentNode.parentNode.nextElementSibling) {
+          previewShip(cell, ships.at(-1));
+        };
+       
+      });
+      cell.addEventListener("mouseout", (e) => {
+        let affectedCells = document.querySelectorAll(".preview");
+        for (let i = 0; i < affectedCells.length; i++){
+          affectedCells[i].classList.remove("preview");
+        }
+      })
+    }
+    
+    
 
     cell.addEventListener("click", (e) => {
       let isPlayerBoard = e.target.parentNode.parentNode.nextElementSibling;
@@ -95,6 +115,16 @@ const displayController = (() => {
   const markMiss = (cell) => {
     cell.classList.add("miss");
   };
+
+  const previewShip = (cell, ship) => {
+    let originalX = parseInt(cell.getAttribute("x"));
+    let originalY = cell.getAttribute("y");
+    for (let i = 0; i < ship.getLength(); i++){
+      
+      let selectedCell = document.querySelector(`[player= 'player'][x='${String(originalX + i)}'][y='${originalY}']`);
+      selectedCell.classList.add("preview");
+    }
+  }
 
   const hover = (cell) => {
     cell.addEventListener("mouseover", (e) => {
@@ -127,8 +157,8 @@ const displayController = (() => {
       }
 
     }else {
-      let selectedShip = ships[currentPlayer.getGameboard().getShips().length];
-
+      let selectedShip = ships.pop();
+      //previewShip(selectedShip,cell);
       currentPlayer.getGameboard().placeShip(
         selectedShip,
         x,y,true);
@@ -137,13 +167,10 @@ const displayController = (() => {
         allPlaced = true;
       }
 
-      
     };
     
-
     body.replaceChild(updateBoard(currentPlayer.getEnemy()), boards[0]);
     body.replaceChild(updateBoard(currentPlayer), boards[1]);
-
   };
 
   const endGame = (name) => {
