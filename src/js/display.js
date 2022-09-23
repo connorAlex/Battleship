@@ -4,9 +4,9 @@ import { Player } from "./player.js";
 
 const displayController = (() => {
     let currentPlayer;
-    let body = document.querySelector("body");
     let grid;
     let allPlaced = false;
+    let body = document.querySelector("body");
     let carrier = ship(5);
     let battleship = ship(4);
     let destroyer = ship(3);
@@ -71,15 +71,11 @@ const displayController = (() => {
       let isPlayerBoard = e.target.parentNode.parentNode.nextElementSibling;
       if (allPlaced === false && isPlayerBoard === null){
         selectCell(cell);
-      } else {
-        if (allPlaced === true && isPlayerBoard != null && (!cell.classList.contains("hit") && !cell.classList.contains("miss") )) {
-          selectCell(cell);
-        };
+      } else if (allPlaced === true && isPlayerBoard != null && !cell.classList.contains("hit") && !cell.classList.contains("miss")) {
+        selectCell(cell);
       };
+  
 
-
-       
-      // selectCell(cell);
     });
 
     if (grid[y][x].hit === true) {
@@ -120,32 +116,28 @@ const displayController = (() => {
     const y = parseInt(cell.getAttribute("y"));
     let boards = document.querySelectorAll(".board");
 
-    console.log(currentPlayer.getGameboard().getShips().length);
-
     if (allPlaced === true) {
       currentPlayer.attack(x,y);
       currentPlayer.getEnemy().robotAttack();
-
-    }
-    if (allPlaced != true){
-      let selectedShip = ships[currentPlayer.getGameboard().getShips().length];
-      console.log("place");
-      console.log(selectedShip);
-      currentPlayer.getGameboard().placeShip(
-        selectedShip,
-        x,y,true);
-        if (currentPlayer.getGameboard().getShips().length === 5){
-          allPlaced = true;
-        }
-      
 
       if (currentPlayer.getGameboard().isAllDestroyed()){
         endGame(currentPlayer.getEnemy().getName());
       } else if (currentPlayer.getEnemyBoard().isAllDestroyed()) {
         endGame(currentPlayer.getName());
-
-        
       }
+
+    }else {
+      let selectedShip = ships[currentPlayer.getGameboard().getShips().length];
+
+      currentPlayer.getGameboard().placeShip(
+        selectedShip,
+        x,y,true);
+
+      if (currentPlayer.getGameboard().getShips().length === 5){
+        allPlaced = true;
+      }
+
+      
     };
     
 
@@ -156,7 +148,6 @@ const displayController = (() => {
 
   const endGame = (name) => {
     body.innerHTML = `game over, ${name} wins!`;
-    
   };
 
   return {
