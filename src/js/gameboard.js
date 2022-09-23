@@ -12,13 +12,18 @@ const gameboard = () => {
     };
     return grid;
   };
-
+  let coordinates = [];
   grid = createGrid();
   const getGrid = () => grid;
   const getMissedShots = () => missedShots;
   const getShips = () => shipCatalogue;
 
   const validateCell = (x,y) => {
+    if (grid[y] === undefined) {
+      console.log(y);
+      console.log("row not valid");
+      return false;
+    };
     if (grid[y][x] === undefined){
       return false;
     };
@@ -26,26 +31,34 @@ const gameboard = () => {
   }
 
   const placeShip = (myShip, x, y, isHorizontal) => {
-    if (grid[y][x].ship != undefined){
+    if (grid[y][x].ship != undefined || !validateCell(x,y)){
       return false;
     };
-    for (let i = 0; i < myShip.getLength(); i++){
-      if (isHorizontal){
-        if (grid[y][x + i] === undefined) return false;
-      } else{
-        if(grid[y + i] === undefined) return false;
-      }
-    };
     
+    for (let i = 0; i < myShip.getLength(); i++){
+      // if (!validateCell(x + i,y) || !validateCell(x, y + i)) return false;
+      if (isHorizontal){
+        if (!validateCell(x + i, y)) return false;
+        if (grid[y][x + i].ship != undefined) return false;
+      } else{
+        if (!validateCell(x, y+i)) return false;
+        if(grid[y + i] === undefined) return false;
+        if (grid[y + i][x].ship != undefined) return false;
+      }
+      
+    };
+    console.log(coordinates);
     shipCatalogue.push(myShip);
 
     for (let i = 0; i < myShip.getLength(); i++) {
       if (isHorizontal === true) {
+        coordinates.push([x+i,y]);
         grid[y][x + i].ship = myShip;
         grid[y][x + i].shipIndex = i;
       } else {
         grid[y + i][x].ship = myShip;
         grid[y + i][x].shipIndex = i;
+        coordinates.push([x,y+i]);
       };
     };
   };
