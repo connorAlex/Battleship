@@ -28,6 +28,7 @@ const displayController = (() => {
     let title = `${player.getName()}'s board`;
 
     titleDiv.append(title);
+    titleDiv.classList.add("title");
     boardParent.append(titleDiv);
     boardParent.classList.add("board");
 
