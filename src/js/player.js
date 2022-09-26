@@ -6,7 +6,6 @@ const Player = (name) => {
     let board = gameboard();
     let enemy;
     let moves = [];
-
     let history = [];
 
     const attack = (x, y) => {
@@ -14,17 +13,28 @@ const Player = (name) => {
         y = parseInt(y);
 
         if (history.includes([x,y]) === false) {
-            getEnemyBoard().receiveAttack(x,y);
-        } else {
-            return false;
+            return getEnemyBoard().receiveAttack(x,y);
         }
-        //history.push([x,y]);
         
     };
 
     const setEnemy = (player) => {
         enemy = player;
     };
+
+    const hasNotHitBefore = (arr) => {
+        let x = arr[0];
+        let y = arr[1];
+
+        if (!moves.find(function([a,b]) {
+            return a === x && b === y
+        })){
+            return true;
+        }
+        moves.pop(x,y);
+        return false;
+
+    }
 
     const getEnemy = () => enemy;
 
@@ -38,7 +48,9 @@ const Player = (name) => {
 
     const robotAttack = () => {
         let coordinates = getRandomCoordinates();
-        attack(coordinates[0],coordinates[1]);
+        if (hasNotHitBefore(coordinates)) {
+            attack(coordinates[0],coordinates[1]);
+        }
     };
 
     //append all possible combinations of [x,y] to an array
@@ -46,7 +58,7 @@ const Player = (name) => {
         while (moves.length != 100) {
             let x = Math.floor(Math.random() * 10);
             let y = Math.floor(Math.random() * 10);
-
+            
             if (!moves.find(function([a,b]) {
                 return a === x && b === y
             })){
@@ -57,10 +69,9 @@ const Player = (name) => {
 
     };
     createMoves();
+    
     const getRandomCoordinates = () => {
-        
         let num = moves.pop();
-        console.log(num);
         return num;
     }
 
