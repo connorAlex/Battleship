@@ -14,9 +14,13 @@ const game = (() => {
   let ships = [carrier, battleship, destroyer, sub, cruiser];
   let direction = false;
   let body = document.querySelector("body");
+  let axisBtn = document.querySelector(".axis");
 
   player.setEnemy(computer);
   computer.setEnemy(player);
+
+  axisBtn.addEventListener("click", () => displayController.toggleOrientation());
+ 
 
   while (computer.getGameboard().getShips().length < 5) {
     let x = Math.floor(Math.random() * 10);
