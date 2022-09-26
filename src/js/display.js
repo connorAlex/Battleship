@@ -5,6 +5,7 @@ import { Player } from "./player.js";
 const displayController = (() => {
   let currentPlayer;
   let grid;
+  let orientation = true;
   let allPlaced = false;
   let body = document.querySelector("body");
   let carrier = ship(5);
@@ -17,6 +18,8 @@ const displayController = (() => {
   const setPlayer = (player) => {
     currentPlayer = player;
   };
+
+  const toggleOrientation = () => orientation = !orientation;
 
   const updateBoard = (player) => {
     grid = player.getGameboard().getGrid();
@@ -121,12 +124,23 @@ const displayController = (() => {
 
   const previewShip = (cell, ship) => {
     let originalX = parseInt(cell.getAttribute("x"));
-    let originalY = cell.getAttribute("y");
+    let originalY = parseInt(cell.getAttribute("y"));
     for (let i = 0; i < ship.getLength(); i++) {
-      let selectedCell = document.querySelector(
-        `[player= 'player'][x='${String(originalX + i)}'][y='${originalY}']`
-      );
-      if (selectedCell != undefined) selectedCell.classList.add("preview");
+
+      if (orientation) {
+        let selectedCell = document.querySelector(
+          `[player= 'player'][x='${String(originalX + i)}'][y='${originalY}']`
+        );
+        if (selectedCell != undefined) selectedCell.classList.add("preview");
+      } else {
+        let selectedCell = document.querySelector(
+          `[player= 'player'][x='${originalX}'][y='${String(originalY + i)}']`
+          
+        );
+        if (selectedCell != undefined) selectedCell.classList.add("preview");
+      }
+      
+      
     }
   };
 
@@ -149,7 +163,7 @@ const displayController = (() => {
       let selectedShip = ships.at(-1);
 
       if (
-        currentPlayer.getGameboard().placeShip(selectedShip, x, y, true) ===
+        currentPlayer.getGameboard().placeShip(selectedShip, x, y, orientation) ===
         false
       ) {
         return false;
@@ -172,6 +186,7 @@ const displayController = (() => {
   return {
     updateBoard,
     setPlayer,
+    toggleOrientation,
   };
 })();
 
