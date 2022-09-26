@@ -1,0 +1,90 @@
+body{
+    font-family: Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    color: #2b2b2b;
+}
+button{
+    background-color: inherit;
+    border: 1px solid;
+    border-radius: 3px;
+    padding: 3px;
+    padding-inline: 20px;
+    transition: .4s;
+}
+button:hover{
+    transition: .4s;
+    background-color: black;
+    border-color: black;
+    color: whitesmoke;
+}
+
+.axis {
+    order: 5;
+}
+.battleship { 
+    font-size: 36px;
+    margin: 15px;
+
+}
+.title {
+    align-self: center;
+    margin: 5px;
+}
+.board{
+    display: flex;
+    flex-direction: column-reverse;
+    margin: 15px;
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: whitesmoke;
+    cursor: none;
+    transition: .5s;
+}
+.board:hover {
+    transition: .5s;
+    box-shadow: 4px 4px;
+    
+}
+
+.row {
+    display: flex;
+    
+}
+.board > div > div {
+    height: 3vh;
+    width: 3vh;
+    
+}
+
+.miss {
+    background-color: lightblue;
+}
+
+.hit {
+    background-color: red !important;
+}
+
+.ship {
+    background-color: grey;
+}
+.hover {
+    background-color: #2b2b2b;
+}
+
+.preview {
+    background-color: #2b2b2b;
+}
+
+footer{
+    
+    justify-content: center;
+    align-items: center;
+}
